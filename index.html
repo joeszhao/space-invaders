@@ -6,60 +6,68 @@
     <title>Space Invaders Home</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f9fa;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(120deg, #232946 0%, #1a1a2e 100%);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
+            color: #eaeaea;
         }
         .container {
-            max-width: 600px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 30px;
+            max-width: 700px;
+            margin: 60px auto;
+            background: rgba(34, 41, 70, 0.95);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            padding: 48px 32px 32px 32px;
             text-align: center;
         }
         h1 {
-            color: #333;
-            margin-bottom: 20px;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #f7fafc;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
         }
         .nav {
             display: flex;
             justify-content: center;
-            gap: 32px;
-            margin-bottom: 30px;
+            gap: 36px;
+            margin-bottom: 40px;
         }
         .nav-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: #f7f8fa;
+            background: #232946;
             border-radius: 16px;
-            padding: 12px 32px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            padding: 18px 38px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
             text-decoration: none;
-            color: #222;
-            font-size: 1rem;
+            color: #eaeaea;
+            font-size: 1.1rem;
+            font-weight: 600;
             border: none;
             position: relative;
             min-width: 120px;
-            transition: box-shadow 0.2s;
+            transition: box-shadow 0.2s, background 0.2s, color 0.2s;
         }
         .nav-btn:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+            box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+            background: #393e6e;
+            color: #ffd803;
         }
         .nav-btn .icon {
-            font-size: 1.6em;
-            margin-bottom: 6px;
+            font-size: 2em;
+            margin-bottom: 8px;
         }
         .nav-btn .dot {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 8px;
-            height: 8px;
+            top: 12px;
+            right: 12px;
+            width: 10px;
+            height: 10px;
             background: #ff3b30;
             border-radius: 50%;
             display: none;
@@ -67,52 +75,77 @@
         .nav-btn.more .dot {
             display: block;
         }
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
+            .container {
+                padding: 24px 8px;
+            }
             .nav {
                 flex-direction: column;
-                gap: 16px;
+                gap: 18px;
             }
             .nav-btn {
                 min-width: 0;
                 width: 100%;
             }
         }
-        .todo-preview {
-            margin-top: 30px;
+        .card {
+            background: #232946;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            padding: 24px;
+            margin-bottom: 28px;
             text-align: left;
         }
-        .todo-preview h2 {
-            font-size: 1.2rem;
-            color: #007bff;
+        .card h2 {
+            font-size: 1.3rem;
+            color: #ffd803;
+            margin-bottom: 12px;
         }
-        .todo-preview ul {
+        .card ul {
             list-style: none;
             padding: 0;
         }
-        .todo-preview li {
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
-            color: #333;
+        .card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #393e6e;
+            color: #eaeaea;
+        }
+        .card a {
+            color: #ffd803;
+            text-decoration: underline;
         }
         .base64-encoder {
-            margin-top: 40px;
-            text-align: left;
+            margin-top: 24px;
         }
         .base64-encoder h2 {
             font-size: 1.2rem;
-            color: #007bff;
+            color: #ffd803;
         }
         .base64-encoder input {
             width: 70%;
             padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #393e6e;
+            background: #232946;
+            color: #eaeaea;
         }
         .base64-encoder button {
             padding: 8px 16px;
             margin-left: 8px;
+            background: #ffd803;
+            color: #232946;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
         }
-        .base64-encoder output {
+        .base64-encoder button:hover {
+            background: #eaeaea;
+            color: #232946;
+        }
+        #base64-output {
             margin-top: 12px;
-            color: #007bff;
+            color: #ffd803;
             word-break: break-all;
         }
     </style>
@@ -137,22 +170,22 @@
                 <span class="icon">⏰</span>
                 Cron Phrase Parser
             </a>
-            <a href="#" class="nav-btn more">
+            <a href="google.html" target="_blank" rel="noopener noreferrer" class="nav-btn more">
                 <span class="icon">⚙️</span>
                 更多
                 <span class="dot"></span>
             </a>
         </div>
-        <div class="todo-preview">
+        <div class="card todo-preview">
             <h2>To-Do List Preview</h2>
             <ul id="todo-preview-list"></ul>
             <a href="todo.html" target="_blank" rel="noopener noreferrer">Go to full To-Do List</a>
         </div>
-        <div class="base64-encoder">
+        <div class="card base64-encoder">
             <h2>Base64 Encoder</h2>
-            <input type="text" id="base64-input" placeholder="Enter text to encode" style="width:70%;padding:8px;">
-            <button id="base64-encode-btn" style="padding:8px 16px;margin-left:8px;">Encode</button>
-            <div id="base64-output" style="margin-top:12px;color:#007bff;word-break:break-all;"></div>
+            <input type="text" id="base64-input" placeholder="Enter text to encode">
+            <button id="base64-encode-btn">Encode</button>
+            <div id="base64-output"></div>
         </div>
     </div>
     <script>
@@ -164,7 +197,6 @@
             li.textContent = (task.completed ? '✔️ ' : '') + task.text;
             previewList.appendChild(li);
         });
-
         // Base64 encoding feature
         document.getElementById('base64-encode-btn').onclick = function() {
             const input = document.getElementById('base64-input').value;
