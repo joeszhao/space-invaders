@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <rect width="200" height="200" fill="#87CEEB" />
+
+  <!-- Ground -->
+  <rect y="150" width="200" height="50" fill="#228B22" />
+
+  <!-- Pelican Body -->
+  <ellipse cx="100" cy="100" rx="30" ry="20" fill="#fff" stroke="#000" stroke-width="2" />
+
+  <!-- Pelican Head -->
+  <circle cx="130" cy="85" r="15" fill="#fff" stroke="#000" stroke-width="2" />
+
+  <!-- Pelican Beak -->
+  <polygon points="140,85 170,95 140,105" fill="#FFA500" stroke="#000" stroke-width="2" />
+
+  <!-- Pelican Eye -->
+  <circle cx="135" cy="80" r="3" fill="#000" />
+
+  <!-- Bicycle Wheels -->
+  <circle cx="70" cy="150" r="20" fill="none" stroke="#000" stroke-width="3" />
+  <circle cx="130" cy="150" r="20" fill="none" stroke="#000" stroke-width="3" />
+
+  <!-- Bicycle Frame -->
+  <line x1="70" y1="150" x2="100" y2="130" stroke="#000" stroke-width="3" />
+  <line x1="100" y1="130" x2="130" y2="150" stroke="#000" stroke-width="3" />
+  <line x1="100" y1="130" x2="100" y2="150" stroke="#000" stroke-width="3" />
+
+  <!-- Bicycle Seat -->
+  <line x1="90" y1="125" x2="110" y2="125" stroke="#000" stroke-width="3" />
+
+  <!-- Bicycle Handlebars -->
+  <line x1="130" y1="150" x2="140" y2="140" stroke="#000" stroke-width="3" />
+  <line x1="140" y1="140" x2="150" y2="140" stroke="#000" stroke-width="3" />
+</svg>

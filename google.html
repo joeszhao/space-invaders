@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Antigravity Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #fff;
+        }
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0; left: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gravity-canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('gravity-canvas');
+        const ctx = canvas.getContext('2d');
+        let W = window.innerWidth;
+        let H = window.innerHeight;
+        canvas.width = W;
+        canvas.height = H;
+
+        // Google logo letters and colors
+        const letters = [
+            {char: 'G', color: '#4285F4'},
+            {char: 'o', color: '#EA4335'},
+            {char: 'o', color: '#FBBC05'},
+            {char: 'g', color: '#34A853'},
+            {char: 'l', color: '#4285F4'},
+            {char: 'e', color: '#EA4335'}
+        ];
+
+        // Each letter is a physics object
+        class Letter {
+            constructor(char, color, x, y) {
+                this.char = char;
+                this.color = color;
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 8;
+                this.vy = (Math.random() - 0.5) * 8;
+                this.angle = Math.random() * Math.PI * 2;
+                this.angularVelocity = (Math.random() - 0.5) * 0.1;
+                this.size = 80;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.angle += this.angularVelocity;
+                // Gravity
+                this.vy += 0.3;
+                // Bounce off walls
+                if (this.x < 0) { this.x = 0; this.vx *= -0.8; }
+                if (this.x > W - this.size) { this.x = W - this.size; this.vx *= -0.8; }
+                if (this.y < 0) { this.y = 0; this.vy *= -0.8; }
+                if (this.y > H - this.size) { this.y = H - this.size; this.vy *= -0.8; }
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x + this.size/2, this.y + this.size/2);
+                ctx.rotate(this.angle);
+                ctx.font = `${this.size}px Arial Black, Arial, sans-serif`;
+                ctx.fillStyle = this.color;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(this.char, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        // Create letters spaced out horizontally
+        let objects = [];
+        for (let i = 0; i < letters.length; i++) {
+            objects.push(new Letter(
+                letters[i].char,
+                letters[i].color,
+                100 + i * 120,
+                100
+            ));
+        }
+
+        // Particle (point) that follows the mouse
+        let mouseParticle = {
+            x: W/2,
+            y: H/2,
+            vx: 0,
+            vy: 0,
+            radius: 16
+        };
+        let mouseActive = false;
+        canvas.addEventListener('mousemove', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const mx = e.clientX - rect.left;
+            const my = e.clientY - rect.top;
+            mouseParticle.x = mx;
+            mouseParticle.y = my;
+            mouseActive = true;
+            // Push away from mouse
+            for (let obj of objects) {
+                const dx = obj.x + obj.size/2 - mx;
+                const dy = obj.y + obj.size/2 - my;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < 150) {
+                    const force = (150 - dist) / 30;
+                    obj.vx += dx/dist * force;
+                    obj.vy += dy/dist * force;
+                }
+            }
+        });
+        canvas.addEventListener('mouseleave', function() {
+            mouseActive = false;
+        });
+        function drawMouseParticle(ctx) {
+            if (!mouseActive) return;
+            ctx.save();
+            ctx.globalAlpha = 0.7;
+            ctx.beginPath();
+            ctx.arc(mouseParticle.x, mouseParticle.y, mouseParticle.radius, 0, Math.PI*2);
+            ctx.fillStyle = '#222';
+            ctx.shadowColor = '#4285F4';
+            ctx.shadowBlur = 12;
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, W, H);
+            for (let obj of objects) {
+                obj.update();
+                obj.draw(ctx);
+            }
+            drawMouseParticle(ctx);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Responsive resize
+        window.addEventListener('resize', () => {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            canvas.width = W;
+            canvas.height = H;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        /* To-Do List Styles */
+        .todo-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .todo-container h2 {
+            margin: 0 0 10px;
+            font-size: 1.5rem;
+            color: #333;
+        }
+
+        .todo-input {
+            width: calc(100% - 50px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .todo-button {
+            padding: 10px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .todo-button:hover {
+            background: #0056b3;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: grab;
+        }
+
+        .todo-item.completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .todo-item button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .todo-item button:hover {
+            color: #0056b3;
+        }
+
+        .todo-item.dragging {
+            opacity: 0.5;
+        }
+
+        .todo-item.drag-over {
+            border: 2px dashed #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h2>To-Do List</h2>
+        <input type="text" class="todo-input" placeholder="Add a new task...">
+        <button class="todo-button">Add</button>
+        <ul class="todo-list"></ul>
+    </div>
+
+    <script>
+        // To-Do List Functionality
+        const todoInput = document.querySelector('.todo-input');
+        const todoButton = document.querySelector('.todo-button');
+        const todoList = document.querySelector('.todo-list');
+
+        // Load tasks from localStorage
+        const loadTasks = () => {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.forEach(task => addTaskToDOM(task.text, task.completed));
+        };
+
+        // Save tasks to localStorage
+        const saveTasks = () => {
+            const tasks = [];
+            document.querySelectorAll('.todo-item').forEach(item => {
+                tasks.push({
+                    text: item.querySelector('span').textContent,
+                    completed: item.classList.contains('completed')
+                });
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        };
+
+        // Add task to DOM
+        const addTaskToDOM = (text, completed = false) => {
+            const li = document.createElement('li');
+            li.className = 'todo-item';
+            li.draggable = true;
+            if (completed) li.classList.add('completed');
+
+            const span = document.createElement('span');
+            span.textContent = text;
+            li.appendChild(span);
+
+            const completeButton = document.createElement('button');
+            completeButton.textContent = completed ? 'Undo' : 'Complete';
+            completeButton.addEventListener('click', () => {
+                li.classList.toggle('completed');
+                completeButton.textContent = li.classList.contains('completed') ? 'Undo' : 'Complete';
+                saveTasks();
+            });
+            li.appendChild(completeButton);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', () => {
+                li.remove();
+                saveTasks();
+            });
+            li.appendChild(deleteButton);
+
+            // Drag and drop events
+            li.addEventListener('dragstart', (e) => {
+                li.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+            li.addEventListener('dragend', () => {
+                li.classList.remove('dragging');
+            });
+            li.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                li.classList.add('drag-over');
+            });
+            li.addEventListener('dragleave', () => {
+                li.classList.remove('drag-over');
+            });
+            li.addEventListener('drop', (e) => {
+                e.preventDefault();
+                li.classList.remove('drag-over');
+                const dragging = document.querySelector('.dragging');
+                if (dragging && dragging !== li) {
+                    todoList.insertBefore(dragging, li.nextSibling);
+                    saveTasks();
+                }
+            });
+
+            todoList.appendChild(li);
+        };
+
+        // Add task event
+        todoButton.addEventListener('click', () => {
+            const text = todoInput.value.trim();
+            if (text) {
+                addTaskToDOM(text);
+                saveTasks();
+                todoInput.value = '';
+            }
+        });
+
+        // Load tasks on page load
+        loadTasks();
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Space Invaders</title>
+    <style>
+        canvas {
+            border: 2px solid #000;
+            background-color: #f0f0f0;
+            display: block;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        .controls {
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Space Invaders</h2>
+    <div class="controls">
+        Start Game | Reset Game | Y | J
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="scoreDisplay" class="text-center"></div>
+    
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Grid size and colors
+        let gridSize = 25;
+        let alienCount = 0;
+        let score = 0;
+        let isPlaying = true;
+        let gameOver = false;
+
+        class Alien {
+            constructor() {
+                this.width = gridSize;
+                this.height = gridSize;
+                this.x = Math.random() * (gridSize - 1);
+                this.y = Math.random() * (gridSize - 1);
+                this.score = score;
+                this.color = `hsl(${Math.random()*180}, 100%, 50%)`;
+            }
+
+            update() {
+                if (gameOver) {
+                    this.x = Math.random() * gridSize;
+                    this.y = Math.random() * gridSize;
+                    resetAlien();
+                }
+                
+                // automatic movement
+                requestAnimationFrame(() => {
+                    alien.x += 0.1;
+                    alien.y += 5;
+                    setTimeout(update, 50);
+                });
+            }
+
+            resetAlien() {
+                this.x = Math.random() * gridSize;
+                this.y = Math.random() * gridSize;
+                score = 0;
+            }
+        }
+
+        function update(time = 0) {
+            if (isPlaying && !gameOver) {
+                Alien().update();
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        function draw() {
+            // Clear canvas
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw all aliens at intervals  
+            setInterval(() => {
+                ctx.fillStyle = 'white';
+                
+                Alien().color = ctx.fillStyle;
+                ctx.fillRect(alien.x, alien.y, alien.width, alien.height);
+                
+                if (gameOver || alien.y >= gridSize) {
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    gameOver = true;
+                }
+            }, 50);
+
+            drawGrid()
+        }
+
+        function drawGrid() {
+            // Draw horizontal lines
+            for (let y = gridSize; y < gridSize * 2; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.fill();
+
+                ctx.fillStyle = '#808080';
+                ctx.font = '30px Arial';
+                ctx.fillText('Y', canvas.width/2, gridSize + 15);
+            }
+
+            // Draw vertical lines
+            for (let x = 0; x <= gridSize; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.fill();
+
+                ctx.fillStyle = '#808080';
+                ctx.font = '30px Arial';
+                ctx.fillText('J', x + gridSize/2, canvas.height/2);
+            }
+        }
+
+        document.querySelector('.startGame').addEventListener('click', () => {
+            isPlaying = true;
+            gameOver = false;
+
+            alienCount = 0;
+            
+            // Start game
+            let startButton = document.getElementById('startGame');
+            const createStartButton = () => {
+                startButton.style.display = 'none';
+                createAlien();
+                setTimeout(createStartButton, 2000);
+            };
+
+            startButton.addEventListener('click', createStartButton);
+
+            createAlien();
+        });
+
+        document.querySelector('.resetGame').addEventListener('click', () => {
+            if (isPlaying) {
+                isPlaying = false;
+                clearInterval(scoreDisplay.textContent);
+            }
+        });
+
+        // Button for starting a new game or resetting
+        const resetStartBtn = document.getElementById('resetGame');
+        resetStartBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                isPlaying = false;
+                gameOver = false;
+                ctx.fillStyle = '#007bff';
+                ctx.font = '30px Arial';
+                createAlien();
+                setTimeout(() => {
+                    isPlaying = false;
+                    clearInterval(scoreDisplay.textContent);
+                    gameOver = false;
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>

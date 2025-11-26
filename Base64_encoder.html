@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 8px 16px;
+            margin-left: 8px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #base64-output {
+            margin-top: 12px;
+            color: #007bff;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Base64 Encoder</h1>
+        <input type="text" id="base64-input" placeholder="Enter text to encode">
+        <button id="base64-encode-btn">Encode</button>
+        <div id="base64-output"></div>
+    </div>
+    <script>
+        document.getElementById('base64-encode-btn').onclick = function() {
+            const input = document.getElementById('base64-input').value;
+            try {
+                const encoded = btoa(unescape(encodeURIComponent(input)));
+                document.getElementById('base64-output').textContent = encoded;
+            } catch (e) {
+                document.getElementById('base64-output').textContent = 'Invalid input for Base64 encoding.';
+            }
+        };
+    </script>
+</body>
+</html>

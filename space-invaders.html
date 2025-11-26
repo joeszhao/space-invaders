@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Space Invaders</title>
+  <style>
+    body { background: #000; color: #fff; text-align: center; }
+    canvas { background: #111; display: block; margin: 0 auto; border: 2px solid #fff; }
+    #info { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Space Invaders</h1>
+  <canvas id="game" width="480" height="640"></canvas>
+  <div id="info"></div>
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    // Player
+    const player = {
+      x: W/2 - 20,
+      y: H - 40,
+      w: 40,
+      h: 20,
+      speed: 5,
+      bullets: []
+    };
+
+    // Invaders
+    const invaderRows = 5, invaderCols = 10;
+    const invaders = [];
+    const invaderW = 30, invaderH = 20;
+    let invaderDx = 1.5, invaderDy = 20, invaderDir = 1;
+    let invaderStep = 0;
+
+    // Game state
+    let leftPressed = false, rightPressed = false, spacePressed = false;
+    let gameOver = false, win = false;
+
+    // Setup invaders
+    for (let r = 0; r < invaderRows; r++) {
+      for (let c = 0; c < invaderCols; c++) {
+        invaders.push({
+          x: 40 + c * (invaderW + 10),
+          y: 40 + r * (invaderH + 10),
+          w: invaderW,
+          h: invaderH,
+          alive: true
+        });
+      }
+    }
+
+    // Controls
+    document.addEventListener('keydown', e => {
+      if (e.code === 'ArrowLeft') leftPressed = true;
+      if (e.code === 'ArrowRight') rightPressed = true;
+      if (e.code === 'Space') spacePressed = true;
+    });
+    document.addEventListener('keyup', e => {
+      if (e.code === 'ArrowLeft') leftPressed = false;
+      if (e.code === 'ArrowRight') rightPressed = false;
+      if (e.code === 'Space') spacePressed = false;
+    });
+
+    function drawPlayer() {
+      ctx.fillStyle = '#0f0';
+      ctx.fillRect(player.x, player.y, player.w, player.h);
+    }
+
+    function drawInvaders() {
+      ctx.fillStyle = '#f00';
+      for (const inv of invaders) {
+        if (inv.alive) ctx.fillRect(inv.x, inv.y, inv.w, inv.h);
+      }
+    }
+
+    function drawBullets() {
+      ctx.fillStyle = '#fff';
+      for (const b of player.bullets) {
+        ctx.fillRect(b.x, b.y, b.w, b.h);
+      }
+    }
+
+    function movePlayer() {
+      if (leftPressed) player.x -= player.speed;
+      if (rightPressed) player.x += player.speed;
+      player.x = Math.max(0, Math.min(W - player.w, player.x));
+    }
+
+    function shoot() {
+      if (spacePressed && player.bullets.length < 1) {
+        player.bullets.push({ x: player.x + player.w/2 - 2, y: player.y, w: 4, h: 10, speed: 7 });
+      }
+    }
+
+    function moveBullets() {
+      for (const b of player.bullets) {
+        b.y -= b.speed;
+      }
+      player.bullets = player.bullets.filter(b => b.y + b.h > 0);
+    }
+
+    function moveInvaders() {
+      let edge = false;
+      for (const inv of invaders) {
+        if (!inv.alive) continue;
+        inv.x += invaderDx * invaderDir;
+        if (inv.x < 0 || inv.x + inv.w > W) edge = true;
+      }
+      invaderStep++;
+      if (edge) {
+        invaderDir *= -1;
+        for (const inv of invaders) {
+          inv.y += invaderDy;
+        }
+      }
+    }
+
+    function checkCollisions() {
+      for (const b of player.bullets) {
+        for (const inv of invaders) {
+          if (inv.alive &&
+              b.x < inv.x + inv.w && b.x + b.w > inv.x &&
+              b.y < inv.y + inv.h && b.y + b.h > inv.y) {
+            inv.alive = false;
+            b.y = -100;
+          }
+        }
+      }
+      // Invader reaches player
+      for (const inv of invaders) {
+        if (inv.alive && inv.y + inv.h >= player.y) {
+          gameOver = true;
+        }
+      }
+      // Win condition
+      if (invaders.every(inv => !inv.alive)) {
+        win = true;
+      }
+    }
+
+    function drawInfo() {
+      const info = document.getElementById('info');
+      if (gameOver) info.textContent = 'Game Over!';
+      else if (win) info.textContent = 'You Win!';
+      else info.textContent = 'Arrow keys to move, Space to shoot';
+    }
+
+    function gameLoop() {
+      ctx.clearRect(0, 0, W, H);
+      drawPlayer();
+      drawInvaders();
+      drawBullets();
+      drawInfo();
+      if (!gameOver && !win) {
+        movePlayer();
+        shoot();
+        moveBullets();
+        if (invaderStep % 20 === 0) moveInvaders();
+        checkCollisions();
+        requestAnimationFrame(gameLoop);
+      }
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>

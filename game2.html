@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Invaders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        /* Removed the to-do list feature and moved it to todo.html */
+    </style>
+</head>
+<body>
+
+    <h1 id="game-over">Game Over!</h1>
+
+    <canvas id="game-canvas"></canvas>
+
+    <script>
+        // Select the canvas element from the document
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Ensure the canvas has a size
+        canvas.width = 800;
+        canvas.height = 600;
+
+        // Clear the canvas initially
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Function to create a space invaders object
+        function SpaceInvaders() {
+            this.x = 10;
+            this.y = 10;
+            this.width = 50;
+            this.height = 30;
+            this.speed = 4;
+            this.score = 0;
+
+            // Method to draw the invaders
+            function drawInvaders() {
+                ctx.fillStyle = 'red';
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            }
+
+            // Move the invaders left and right
+            function moveInvaders() {
+                this.x -= this.speed;
+            }
+
+            // Check for collisions with the walls or player
+            function checkCollisions() {
+                if (this.x < 0 || this.x > canvas.width - this.width) {
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+
+            // Update game state
+            function updateGameState() {
+                moveInvaders();
+                checkCollisions();
+                drawInvaders();
+            }
+
+            // Start the game loop
+            function startGameLoop() {
+                setInterval(updateGameState, 100); // 100 milliseconds = 1 second
+            }
+
+            // Bind methods to the SpaceInvaders instance
+            this.drawInvaders = drawInvaders.bind(this);
+            this.moveInvaders = moveInvaders.bind(this);
+            this.checkCollisions = checkCollisions.bind(this);
+            this.updateGameState = updateGameState.bind(this);
+            this.startGameLoop = startGameLoop.bind(this);
+        }
+
+        // Create an instance of SpaceInvaders and start the game loop
+       const spaceInvaders = new SpaceInvaders();
+        spaceInvaders.startGameLoop();
+
+        const gameOverText = document.getElementById('game-over');
+        gameOverText.style.display = 'none'; // Hide "Game Over" initially
+
+        // Function to restart the game
+        function restartGame() {
+            gameOverText.style.display = 'none';
+            spaceInvaders.x = 10;
+            spaceInvaders.y = 10;
+            spaceInvaders.score = 0;
+            spaceInvaders.startGameLoop();
+        }
+
+        // Add event listener to restart the game on key press
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Enter') {
+                restartGame();
+            }
+        });
+    </script>
+</body>
+</html>

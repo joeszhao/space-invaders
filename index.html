@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Invaders Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 30px;
+        }
+        .nav-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f7f8fa;
+            border-radius: 16px;
+            padding: 12px 32px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            text-decoration: none;
+            color: #222;
+            font-size: 1rem;
+            border: none;
+            position: relative;
+            min-width: 120px;
+            transition: box-shadow 0.2s;
+        }
+        .nav-btn:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+        }
+        .nav-btn .icon {
+            font-size: 1.6em;
+            margin-bottom: 6px;
+        }
+        .nav-btn .dot {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            background: #ff3b30;
+            border-radius: 50%;
+            display: none;
+        }
+        .nav-btn.more .dot {
+            display: block;
+        }
+        @media (max-width: 600px) {
+            .nav {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .nav-btn {
+                min-width: 0;
+                width: 100%;
+            }
+        }
+        .todo-preview {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .todo-preview h2 {
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+        .todo-preview ul {
+            list-style: none;
+            padding: 0;
+        }
+        .todo-preview li {
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+        .base64-encoder {
+            margin-top: 40px;
+            text-align: left;
+        }
+        .base64-encoder h2 {
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+        .base64-encoder input {
+            width: 70%;
+            padding: 8px;
+        }
+        .base64-encoder button {
+            padding: 8px 16px;
+            margin-left: 8px;
+        }
+        .base64-encoder output {
+            margin-top: 12px;
+            color: #007bff;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Space Invaders</h1>
+        <div class="nav">
+            <a href="space-invaders.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
+                <span class="icon">🕹️</span>
+                Play Game
+            </a>
+            <a href="todo.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
+                <span class="icon">📝</span>
+                To-Do List
+            </a>
+            <a href="Base64_encoder.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
+                <span class="icon">🔏</span>
+                Base64 Encoder
+            </a>
+            <a href="cron_pharse.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
+                <span class="icon">⏰</span>
+                Cron Phrase Parser
+            </a>
+            <a href="#" class="nav-btn more">
+                <span class="icon">⚙️</span>
+                更多
+                <span class="dot"></span>
+            </a>
+        </div>
+        <div class="todo-preview">
+            <h2>To-Do List Preview</h2>
+            <ul id="todo-preview-list"></ul>
+            <a href="todo.html" target="_blank" rel="noopener noreferrer">Go to full To-Do List</a>
+        </div>
+        <div class="base64-encoder">
+            <h2>Base64 Encoder</h2>
+            <input type="text" id="base64-input" placeholder="Enter text to encode" style="width:70%;padding:8px;">
+            <button id="base64-encode-btn" style="padding:8px 16px;margin-left:8px;">Encode</button>
+            <div id="base64-output" style="margin-top:12px;color:#007bff;word-break:break-all;"></div>
+        </div>
+    </div>
+    <script>
+        // Show a preview of the first 5 tasks from localStorage
+        const previewList = document.getElementById('todo-preview-list');
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        tasks.slice(0, 5).forEach(task => {
+            const li = document.createElement('li');
+            li.textContent = (task.completed ? '✔️ ' : '') + task.text;
+            previewList.appendChild(li);
+        });
+
+        // Base64 encoding feature
+        document.getElementById('base64-encode-btn').onclick = function() {
+            const input = document.getElementById('base64-input').value;
+            try {
+                // Encode to Base64
+                const encoded = btoa(unescape(encodeURIComponent(input)));
+                document.getElementById('base64-output').textContent = encoded;
+            } catch (e) {
+                document.getElementById('base64-output').textContent = 'Invalid input for Base64 encoding.';
+            }
+        };
+    </script>
+</body>
+</html>

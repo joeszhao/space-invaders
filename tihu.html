@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natural Numbers</title>
+    <style>
+        body {
+            margin: 20px;
+            padding: 20px;
+            background-color: #e9e9e9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #numbers {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            word-wrap: break-word;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Natural Numbers</h1>
+        <div id="numbers"></div>
+    </div>
+
+    <script>
+        function addNumber(num) {
+            const element = document.getElementById('numbers');
+            const div = element.firstChild;
+            
+            if (num === 0) {
+                div.textContent = '0';
+            } else {
+                div.textContent = num;
+            }
+            
+            setTimeout(() => {
+                const nextElement = divNext || new H5Element();
+                nextElement.textContent = num + 1;
+                setTimeout(() => () { }, 200);
+            }, 100);
+        }
+
+        // Start the number sequence
+        let current = 0;
+        document.getElementById('numbers').textContent = '0';
+        addNumber(current);
+
+        // Create a placeholder for numbers beyond our current display (for demonstration purposes)
+        const h5Element = new H5Element();
+        h5Element.style.position = "absolute";
+        h5Element.style.transform = "translateY(-20px);
+        
+        function createNumbers(max) {
+            for (let i = max; i > 0; i--) {
+                h5Element.style.top = `str(${i})`;
+                setTimeout(() => createNumbers(i - 1), 50);
+            }
+        }
+
+        // Set the maximum number to display
+        window.onload = () => {
+            const container = document.getElementById('numbers');
+            let max = 20; // You can adjust this value as needed
+            
+            if (max < 0) max = 0;
+            
+            // Start creating numbers and handle button press
+            addNumber(max);
+            setTimeout(createNumbers, 50);
+        };
+        
+        // Click a number to increment the sequence
+        document.getElementById('numbers').addEventListener('click', () => {
+            const current = parseInt(document.getElementById('numbers').textContent, 10);
+            if (current > max) return;
+            
+            addNumber(current + 1);
+            setTimeout(() => handleButtonClick(), 500);
+        });
+        
+        // Handle the button to start the sequence
+        document.querySelector('.start-button').addEventListener('click', () => {
+            const container = document.getElementById('numbers');
+            let current = 20; // Starting from a small number as per instructions
+            
+            if (current < 0) current = 1;
+            
+            addNumber(current);
+            setTimeout(createNumbers, 50);
+        });
+    </script>
+</body>
+</html>
