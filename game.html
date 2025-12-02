@@ -240,10 +240,13 @@
             });
         }
 
-        function collision(offsetX = 0, offsetY = 0, shape = currentPiece.shape) {
-            for (let y = 0; y < shape.length; y++) {
-                for (let x = 0; x < shape[y].length; x++) {
-                    if (shape[y][x]) {
+        function collision(offsetX = 0, offsetY = 0, shape = null) {
+            const shapeToCheck = shape || (currentPiece ? currentPiece.shape : null);
+            if (!shapeToCheck) return false;
+            
+            for (let y = 0; y < shapeToCheck.length; y++) {
+                for (let x = 0; x < shapeToCheck[y].length; x++) {
+                    if (shapeToCheck[y][x]) {
                         const newX = currentX + x + offsetX;
                         const newY = currentY + y + offsetY;
                         
