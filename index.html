@@ -30,9 +30,10 @@
             letter-spacing: 1px;
         }
         .nav {
-            display: flex;
-            justify-content: center;
-            gap: 36px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+            align-items: stretch;
             margin-bottom: 40px;
         }
         .nav-btn {
@@ -80,8 +81,8 @@
                 padding: 24px 8px;
             }
             .nav {
-                flex-direction: column;
-                gap: 18px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
             }
             .nav-btn {
                 min-width: 0;
@@ -162,13 +163,14 @@
                 <span class="icon">🎮</span>
                 Tetris
             </a>
-            <a href="todo.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
-                <span class="icon">📝</span>
-                To-Do List
-            </a>
+            <!-- Removed duplicate Base64 Encoder nav item -->
             <a href="Base64_encoder.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
-                <span class="icon">🔏</span>
+                <span class="icon">🔤</span>
                 Base64 Encoder
+            </a>
+            <a href="markdown.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
+                <span class="icon">📄</span>
+                Web → Markdown
             </a>
             <a href="cron_pharse.html" target="_blank" rel="noopener noreferrer" class="nav-btn">
                 <span class="icon">⏰</span>
@@ -184,38 +186,9 @@
                 <span class="dot"></span>
             </a>
         </div>
-        <div class="card todo-preview">
-            <h2>To-Do List Preview</h2>
-            <ul id="todo-preview-list"></ul>
-            <a href="todo.html" target="_blank" rel="noopener noreferrer">Go to full To-Do List</a>
-        </div>
-        <div class="card base64-encoder">
-            <h2>Base64 Encoder</h2>
-            <input type="text" id="base64-input" placeholder="Enter text to encode">
-            <button id="base64-encode-btn">Encode</button>
-            <div id="base64-output"></div>
-        </div>
+        <!-- Links only; removed embedded To-Do preview and Base64 encoder UI -->
     </div>
-    <script>
-        // Show a preview of the first 5 tasks from localStorage
-        const previewList = document.getElementById('todo-preview-list');
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        tasks.slice(0, 5).forEach(task => {
-            const li = document.createElement('li');
-            li.textContent = (task.completed ? '✔️ ' : '') + task.text;
-            previewList.appendChild(li);
-        });
-        // Base64 encoding feature
-        document.getElementById('base64-encode-btn').onclick = function() {
-            const input = document.getElementById('base64-input').value;
-            try {
-                // Encode to Base64
-                const encoded = btoa(unescape(encodeURIComponent(input)));
-                document.getElementById('base64-output').textContent = encoded;
-            } catch (e) {
-                document.getElementById('base64-output').textContent = 'Invalid input for Base64 encoding.';
-            }
-        };
-    </script>
+    <!-- No inline functionality: links only -->
+    
 </body>
 </html>

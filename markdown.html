@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage to Markdown</title>
+    <style>
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background: #232946;
+            color: #eaeaea;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: #1a1a2e;
+            padding: 32px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 24px;
+            color: #ffd803;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #393e6e;
+            background: #232946;
+            color: #eaeaea;
+            margin-bottom: 16px;
+            font-size: 1rem;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            background: #ffd803;
+            color: #232946;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background: #eaeaea;
+            color: #232946;
+        }
+        .status {
+            margin-top: 18px;
+            color: #ffd803;
+            text-align: center;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Webpage to Markdown</h1>
+        <input type="text" id="url-input" placeholder="Enter webpage URL">
+        <button id="convert-btn">Convert & Save</button>
+        <div class="status" id="status"></div>
+    </div>
+    <script>
+        document.getElementById('convert-btn').onclick = async function() {
+            const url = document.getElementById('url-input').value.trim();
+            const status = document.getElementById('status');
+            if (!url) {
+                status.textContent = 'Please enter a valid URL.';
+                return;
+            }
+            status.textContent = 'Fetching and converting...';
+            try {
+                // Call backend API to fetch and convert
+                const response = await fetch(`http://localhost:3000/convert-to-markdown?url=${encodeURIComponent(url)}`);
+                const result = await response.json();
+                if (result.success) {
+                    status.textContent = `Markdown saved to docs/${result.filename}`;
+                } else {
+                    status.textContent = 'Failed to convert webpage.';
+                }
+            } catch (e) {
+                status.textContent = 'Error occurred during conversion.';
+            }
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "space-invaders-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2",
+    "turndown": "^7.1.2",
+    "sanitize-filename": "^1.6.3"
+  }
+}
