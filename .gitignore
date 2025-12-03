@@ -1,0 +1,13 @@
+# Ignore generated markdown docs
+/docs/
+
+# Node artifacts
+node_modules/
+npm-debug.log*
+
+# Logs
+logs/
+*.log
+
+# MacOS metadata
+.DS_Store
